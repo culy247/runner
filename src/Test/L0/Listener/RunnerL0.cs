@@ -149,6 +149,9 @@ namespace GitHub.Runner.Common.Tests.Listener
                     _messageListener.Verify(x => x.CreateSessionAsync(It.IsAny<CancellationToken>()), Times.Once());
                     _messageListener.Verify(x => x.DeleteSessionAsync(), Times.Once());
                     _messageListener.Verify(x => x.DeleteMessageAsync(It.IsAny<TaskAgentMessage>()), Times.AtLeastOnce());
+
+                    // verify that we didn't try to delete local config files (since we're not ephemeral)
+                    _configurationManager.Verify(x => x.DeleteLocalConfigFiles(), Times.Never());
                 }
             }
         }
@@ -312,6 +315,9 @@ namespace GitHub.Runner.Common.Tests.Listener
                 _messageListener.Verify(x => x.CreateSessionAsync(It.IsAny<CancellationToken>()), Times.Once());
                 _messageListener.Verify(x => x.DeleteSessionAsync(), Times.Once());
                 _messageListener.Verify(x => x.DeleteMessageAsync(It.IsAny<TaskAgentMessage>()), Times.AtLeastOnce());
+
+                // verify that we tried to delete local config files (since we are ephemeral)
+                _configurationManager.Verify(x => x.DeleteLocalConfigFiles(), Times.Once());
             }
         }
 

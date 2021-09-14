@@ -478,6 +478,12 @@ namespace GitHub.Runner.Listener
                     }
 
                     messageQueueLoopTokenSource.Dispose();
+
+                    if (runOnce)
+                    {
+                        var configManager = HostContext.GetService<IConfigurationManager>();
+                        configManager.DeleteLocalConfigFiles();
+                    }
                 }
             }
             catch (TaskAgentAccessTokenExpiredException)
